@@ -164,7 +164,7 @@ Note: `HEDIT.EXE` must reside together with `haCrypt.exe` in the same directory
 - DES.exe..  V2.0
 - AES.exe..  V2.0
 - TDES.exe   V2.0  
-see [HEDIT 1.5 Help.txt](HEDIT%201.5%20Help.txt)  
+see [HEDIT 1.5 Help.txt](document/HEDIT_1.5_Help.txt)  
 
 #### HEDIT Help
 ```
