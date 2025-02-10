@@ -1,1 +1,436 @@
+## haCrypt - Crypto tool for DES, AES, TDEA and RSA.
+## haCrypt.nmk - NMAKE Developer script file.
+## (c)2021 by helmut altmann
 
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; see the file COPYING.  If not, write to
+## the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+## Boston, MA 02111-1307, USA.
+
+#******************************************************************************
+# NMake file for the 32/64bit Windows Desktop-App Project: PROJ.EXE
+#
+#  ---------------------------------------------------------------------------
+# |                  Copyright (c)2021 by ha.                                 |
+#  ---------------------------------------------------------------------------
+#                                                                 
+#     ----------------------------------------------------
+#    |  Invocation:  NMAKE haCrypt.NMK                    |  28.08.2021 ha
+#    |  Invocation:  NMAKE haCrypt.nmk /ALL SETVERSION=1  |
+#     ----------------------------------------------------
+#
+#    C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools:
+#
+#    64bit-Version Build for Windows 10 and greater
+#      Visual Studio 2019 Developer Command Prompt v16.8.4
+#      [vcvarsall.bat] Environment initialized for: 'x64'
+#      Copyright (c) 2020 Microsoft Corporation
+#      C:\Program Files (x86)\Microsoft Visual Studio\2019\Community>
+#     Microsoft (R) Macro Assembler (x64) 'ML64' Version 14.28.29336.0
+#     Microsoft (R) C/C++-Optimierungscompiler Version 19.28.29336 for x64
+#     Microsoft (R) Incremental Linker Version 14.28.29336.0
+#     Microsoft (R) Program Maintenance Utility, Version 14.28.29336.0
+#
+#    32bit-Version Build for Windows XP and >= Win10
+#        Visual Studio 2010 Developer Command Prompt
+#        C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC>
+#    C:\Program Files (x86)\Microsoft Visual Studio\2010\BuildTools: XP SP3
+#        Microsoft (R) Macro Assembler Version 14.28.29910.0
+#        Microsoft (R) C/C++-Optimierungscompiler Version 16.00.30319.01 for x86 XP
+#     Microsoft (R) Incremental Linker Version 10.00.30319.01
+#     Microsoft (R) Program Maintenance Utility, Version 10.00.30319.01
+#
+#    32bit-Version Build for Win10 and greater
+#        C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools: Windows 10
+#     Microsoft (R) Macro Assembler Version 14.28.29910.0
+#     Microsoft (R) C/C++-Optimierungscompiler Version 19.28.29910 for x86
+#     Microsoft (R) Incremental Linker Version 14.28.29910.0
+#     Microsoft (R) Program Maintenance Utility, Version 14.28.29910.0
+#
+# Product: PROJ.EXE                                                          
+# Module: haPROJ.mnk                                                        
+#
+#---------------------------------------------------------------------------
+
+PROJ = haCrypt                          # The ASM & C++ modules
+FOLDER = C:\Temp600\__\         # Folder prefix to the project,
+                            #  using 2010 or 2019 MS Build-tools.
+
+#OBJ = .^\                      # Place to put object files
+#LST = .\$(@B).LST              # Place to put listing files
+#LST = .\NUL                    # Place to discard files
+
+#------------------------------------------------------------------------------
+#                           INFERENCE RULE
+#------------------------------------------------------------------------------
+#cl /c /nologo /Gs /Od /MT c:\temp600\__\des.cpp /Foc:\temp600\__\des.obj /Fac:\temp600\__\des.as
+#ml /c /nologo /Sn /Sg /Sp84 /Flc:\temp600\__\des_od.lst /Foc:\temp600\__\des_od.obj c:\temp600\__\des_od.as
+#nmake /N /D c:\temp600\__\hacrypt.nmk >C:\temp600\__\_nmk.txt
+
+# --------------
+# INFERENCE RULE                                                                                      
+# --------------
+.asm.obj:
+#       @ML $(AFLAGS) /Fo$(FOLDER)$(@B).obj /Fl$(FOLDER)$(@B).lst $(FOLDER)$(@B).asm
+#       @ML64 $(AFLAGS) /Fo$(FOLDER)$(@B).obj /Fl$(FOLDER)$(@B).lst $(FOLDER)$(@B).asm
+        @$(AS) $(AFLAGS) /Fo$(FOLDER)$(@B).obj /Fl$(FOLDER)$(@B).lst $(FOLDER)$(@B).asm
+
+.c.obj:
+        @CL $(CFLAGS) /Fo$(FOLDER)$(@B).obj $(FOLDER)$(@B).c
+
+.cpp.obj:
+        @CL $(CFLAGS) /Fo$(FOLDER)$(@B).obj $(FOLDER)$(@B).cpp
+
+.rc.res:
+        @RC $(RFLAGS) $(FOLDER)$(@B).rc
+
+# -------------------------------------------
+# PSEUDO TARGETs POINTING TO THE REAL TARGETs
+# -------------------------------------------
+_all:   $(FOLDER)$(PROJ) \
+        $(FOLDER)$(PROJ)Fast.exe \
+        $(FOLDER)$(PROJ)AlgoMQ.obj $(FOLDER)$(PROJ)Quick.exe
+
+#------------------------------------------------------------------------------
+#
+#               $(PROJ) TARGET BUILD (Macros for build-control)
+#
+$(FOLDER)$(PROJ):
+#
+!IFNDEF SETVERSION
+        date /T >$(FOLDER)haCryptBuildTime.ver
+        time /T >>$(FOLDER)haCryptBuildTime.ver
+        $(FOLDER)BuildVersion.vbs
+!ELSE
+        $(FOLDER)SetVersion.vbs INIT
+!ENDIF
+#
+# Set a flag in an NMAKE Makefile if the cl compiler version is 16.
+# Note that cl /? prints the version information to the standard error stream
+#  and the help text to the standard output.
+#  To be able to check the version with the findstr command one must first
+#  redirect stderr to stdout using 2>&1.
+# 
+# -------------------------------------------------
+# Determine the assembler/compiler version in use: |
+#  Microsoft Visual Studio 2019 (Windows 10 64bit) |
+#   ML64 Version 14.28.29336.0 for x64             |
+#   CL Version 19.28.29336 for x64                 |
+#  Microsoft Visual Studio 2019 (Windows 10 32bit) |
+#   ML Version 14.28.29910.0 for x86               |
+#   CL Version 19.28.29910 for x86                     |
+#  Microsoft Visual Studio 2010 (WindowsXP 32bit)  |
+#   ML Version 14.28.29910.0 for x86 (=VS 2019)    |
+#   CL Version 16.00.30319.01 for 80x86            |
+# -------------------------------------------------
+!IF ([ml64 2>&1 | findstr /C:"x64" > nul] == 0) 
+FLAG = "64bit Version"         # 64bit for Windows 10
+!ELSEIF ([cl 2>&1 | findstr /C:"Version 16" > nul] == 0)
+FLAG = "32bit XP Version"      # 32bit for XP and Win10
+OS = _XP
+!ELSE 
+FLAG = "32bit Version"         # 32bit for Windows 10
+OS =
+!ENDIF
+# Nice trick to display the current Version $(FLAG)
+# Since Nmake does not recognize any console commands
+# at this point within the script.
+!IF ([ECHO 2>&1 ---BUILD---$(FLAG)])
+!ENDIF
+!IF ([ECHO. 2>&1])
+!ENDIF
+
+# -------------------
+# Global tool options
+# -------------------
+#AFLAGS=/nologo /c /Sn /Sg /Sp84 /Fl /DhaDEBUG
+AFLAGS=/nologo /c /Sn /Sg /Sp84 /Fl
+
+!IFDEF TB_STANDARD
+RFLAGS=
+! IF ($(FLAG) == "64bit Version")       # For Win10
+CFLAGS=/c /nologo /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /DTB_STANDARD /Dx64 /EHsc
+! ELSE                                  # For Windows XP and Win10
+CFLAGS=/c /nologo /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /DTB_STANDARD /EHsc
+! ENDIF
+
+!ELSE # (THEME = default)
+RFLAGS=/dTHEME
+! IF ($(FLAG) == "64bit Version")       # For Win10
+CFLAGS=/c /nologo /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /DTHEME /Dx64 /EHsc
+! ELSE                                  # For Windows XP and Win10
+CFLAGS=/c /nologo /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /DTHEME /EHsc
+! ENDIF
+!ENDIF # THEME # TB_STANDARD
+
+#LFLAGS=/nologo /INCREMENTAL /MANIFEST \
+#       /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /MANIFEST:EMBED \
+#       /DEBUG:FASTLINK /SUBSYSTEM:WINDOWS \
+#       /TLBID:1 /DYNAMICBASE /NXCOMPAT
+#
+
+!IF ($(FLAG) == "64bit Version")        # For Win10
+LFLAGS=/nologo /INCREMENTAL /MANIFEST \
+       /MANIFESTUAC:"level='asInvoker' uiAccess='false'" \
+       /SUBSYSTEM:WINDOWS \
+       /TLBID:1 /DYNAMICBASE /NXCOMPAT /LARGEADDRESSAWARE:NO
+!ELSE                                   # For Windows XP and Win10
+# --- Performance tuning ---
+# Note: Option /SECTION "_SMC" needed for Pentium CPUs ("32bit XP Version" only)
+# Self-modifying Code (SMC) special section name: _SMC,RWE [=Rd/Wr/Ex]
+#                     LFLAGS=/SECTION:_SMC,RWE /MANIFESTUAC:"uiAccess='true'"
+#
+LFLAGS=/nologo /INCREMENTAL /MANIFEST \
+       /SECTION:_SMC,RWE /MANIFESTUAC:"uiAccess='true'" \
+       /MANIFESTUAC:"level='asInvoker' uiAccess='false'" \
+       /SUBSYSTEM:WINDOWS \
+       /TLBID:1 /DYNAMICBASE /NXCOMPAT
+!ENDIF
+
+LIBS= KERNEL32.LIB USER32.LIB GDI32.LIB WINSPOOL.LIB COMDLG32.LIB ADVAPI32.LIB \
+      SHELL32.LIB OLE32.LIB OLEAUT32.LIB UUID.LIB ODBC32.LIB ODBCCP32.LIB \
+      Comctl32.lib shlwapi.lib uxtheme.lib Propsys.lib
+
+# --------------------------------------------------
+# Macro definitions of the object module depedencies
+# --------------------------------------------------
+OBJECTS = $(FOLDER)$(PROJ)Main.obj $(FOLDER)$(PROJ)Win.obj $(FOLDER)$(PROJ)Draw.obj \
+          $(FOLDER)$(PROJ)FileC.obj $(FOLDER)$(PROJ)FileT.obj $(FOLDER)$(PROJ)FileK.obj \
+          $(FOLDER)$(PROJ)FileL.obj $(FOLDER)$(PROJ)FileB.obj $(FOLDER)$(PROJ)FileR.obj \
+          $(FOLDER)$(PROJ)Browse.obj $(FOLDER)$(PROJ)Console.obj $(FOLDER)$(PROJ)Err.obj \
+          $(FOLDER)$(PROJ)Key.obj $(FOLDER)$(PROJ)Dialog.obj $(FOLDER)$(PROJ)Ctrl.obj \
+          $(FOLDER)$(PROJ)Progbar.obj $(FOLDER)$(PROJ)EditFld.obj $(FOLDER)$(PROJ)Menu.obj \
+          $(FOLDER)$(PROJ)Algo.obj $(FOLDER)$(PROJ)AlgoL.obj $(FOLDER)$(PROJ)AlgoM.obj \
+!IF ($(FLAG) == "64bit Version")        # For Win10
+          $(FOLDER)desfast64.obj \
+          $(FOLDER)tdesfast64.obj \
+          $(FOLDER)aesfast64.obj \
+          $(FOLDER)haDebug64.obj \
+!ELSE                                   # For Windows XP and Win10
+          $(FOLDER)desfast.obj \
+          $(FOLDER)tdesfast.obj \
+          $(FOLDER)aesfast.obj \
+          $(FOLDER)haDebug.obj \
+!ENDIF     
+          $(FOLDER)$(PROJ)AlgoRsa.obj $(FOLDER)rsafunc.obj $(FOLDER)rsabiginteger.obj \
+          $(FOLDER)$(PROJ)WRL.obj $(FOLDER)$(PROJ)BuildTime.obj $(FOLDER)$(PROJ).res
+
+OBJECTSQUICK = $(FOLDER)$(PROJ)Main.obj $(FOLDER)$(PROJ)Win.obj $(FOLDER)$(PROJ)Draw.obj \
+          $(FOLDER)$(PROJ)FileC.obj $(FOLDER)$(PROJ)FileT.obj $(FOLDER)$(PROJ)FileK.obj \
+          $(FOLDER)$(PROJ)FileL.obj $(FOLDER)$(PROJ)FileB.obj $(FOLDER)$(PROJ)FileR.obj \
+          $(FOLDER)$(PROJ)Browse.obj $(FOLDER)$(PROJ)Console.obj $(FOLDER)$(PROJ)Err.obj \
+          $(FOLDER)$(PROJ)Key.obj $(FOLDER)$(PROJ)Dialog.obj $(FOLDER)$(PROJ)Ctrl.obj \
+          $(FOLDER)$(PROJ)Progbar.obj $(FOLDER)$(PROJ)EditFld.obj $(FOLDER)$(PROJ)Menu.obj \
+          $(FOLDER)$(PROJ)Algo.obj $(FOLDER)$(PROJ)AlgoL.obj $(FOLDER)$(PROJ)AlgoMQ.obj \
+          $(FOLDER)des.obj \
+          $(FOLDER)aes.obj \
+!IF ($(FLAG) == "64bit Version")        # For Win10
+          $(FOLDER)tdesfast64.obj \
+!ELSE                                   # For Windows XP and Win10
+          $(FOLDER)tdesfast.obj \
+!ENDIF     
+          $(FOLDER)$(PROJ)AlgoRsa.obj $(FOLDER)rsafunc.obj $(FOLDER)rsabiginteger.obj \
+          $(FOLDER)$(PROJ)WRL.obj $(FOLDER)$(PROJ)BuildTime.obj $(FOLDER)$(PROJ).res
+
+CLEAN =  $(FOLDER)*.ilk
+
+#------------------------------------------------------------------------------
+#
+#        For $(PROJ).EXE: List of dependencies for every object file
+#
+$(FOLDER)$(PROJ).res:           $(FOLDER)$(@B).rc  $(FOLDER)$(PROJ).h $(FOLDER)*.ico
+
+$(FOLDER)$(PROJ)Main.obj:       $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)$(PROJ).rc
+
+$(FOLDER)$(PROJ)Win.obj:        $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)$(PROJ).rc
+
+$(FOLDER)$(PROJ)Draw.obj:       $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)$(PROJ).rc
+
+$(FOLDER)$(PROJ)FileC.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)FileT.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)FileK.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)FileL.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)FileB.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)FileR.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Browse.obj:     $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Console.obj:    $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Err.obj:        $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Key.obj:        $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Dialog.obj:     $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Ctrl.obj:       $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Progbar.obj:    $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)EditFld.obj:    $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Menu.obj:       $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)Algo.obj:       $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)AlgoL.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)AlgoM.obj:      $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)WRL.obj:        $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h
+
+$(FOLDER)$(PROJ)BuildTime.obj:  $(FOLDER)$(PROJ)BuildTime.ver
+
+!IF ($(FLAG) == "64bit Version")        # For Win10
+$(FOLDER)aesfast64.obj:         $(FOLDER)$(@B).asm $(FOLDER)aesfast.inc
+$(FOLDER)desfast64.obj:         $(FOLDER)$(@B).asm
+$(FOLDER)tdesfast64.obj:        $(FOLDER)$(@B).asm
+$(FOLDER)haDebug64.obj:         $(FOLDER)$(@B).asm
+
+!ELSE                                   # For Windows XP and WIN10
+$(FOLDER)aesfast.obj:           $(FOLDER)$(@B).asm $(FOLDER)aesfast.inc
+$(FOLDER)desfast.obj:           $(FOLDER)$(@B).asm
+$(FOLDER)tdesfast.obj:          $(FOLDER)$(@B).asm
+$(FOLDER)haDebug.obj:           $(FOLDER)$(@B).asm
+!ENDIF
+
+$(FOLDER)$(PROJ)AlgoRsa.obj:    $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)rsafuncC.h $(FOLDER)rsabigintegerC.h
+$(FOLDER)rsafunc.obj:           $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)rsafuncC.h $(FOLDER)rsabigintegerC.h
+$(FOLDER)rsabiginteger.obj:     $(FOLDER)$(@B).cpp $(FOLDER)$(PROJ).h $(FOLDER)rsafuncC.h $(FOLDER)rsabigintegerC.h
+
+# Special build: Compiling only C++ modules (not using the fast ASM modules)
+#
+#$(FOLDER)$(PROJ)AlgoMQ.obj     $(FOLDER)$(PROJ)AlgoM.cpp
+#$(FOLDER)des.obj:              $(FOLDER)$(@B).cpp
+#$(FOLDER)aes.obj:              $(FOLDER)$(@B).cpp $(FOLDER)$(@B).h
+
+!IFDEF TB_STANDARD  # (THEME = old Style)
+#------------------------------------------------------------------------------
+#
+#               $(PROJ)Fast target build (TB_STANDARD)
+#
+$(FOLDER)$(PROJ)Fast.exe:       $(OBJECTS)
+#
+# Detect if "haCrypt" is running. It must be terminated before rebuild.
+# ":" should appear in TASKLIST output only if the task is NOT found,
+# Hence FIND will set the ERRORLEVEL to 0 for 'not found' and 1 for 'found'.
+#
+!IF ([tasklist /NH /FI "IMAGENAME eq $(PROJ)STD_XP.exe" | FIND ":" > nul] == 1)
+        -TASKKILL /F /IM $(@F:Fast=STD_XP) > nul
+!ENDIF
+!IF ($(FLAG) == "32bit XP Version")     # For XP and Win10
+        @ECHO Build: $(@F:Fast=STD_XP) - Windows XP and Win10 Compatible $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@F:Fast=STD_XP) $** $(LIBS) >$(FOLDER)$(@B:Fast=STD_XP).link
+        @ECHO Build Complete: $(FOLDER)$(@F:Fast=STD_XP).EXE - $(FLAG)
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        32
+! ENDIF
+!ELSE                                   # For Win10 only
+        @ECHO Build: $(@F:Fast=STD64) - Win10 only $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@F:Fast=STD64) $** $(LIBS) >$(FOLDER)$(@B:Fast=STD64).link
+        @ECHO Build Complete: $(FOLDER)$(@B:Fast=STD64).EXE - $(FLAG)
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        64
+! ENDIF
+!ENDIF
+        DEL $(CLEAN)
+
+#------------------------------------------------------------------------------
+#
+#               $(PROJ)Quick Target build (TB_STANDARD)
+#
+$(FOLDER)$(PROJ)Quick.exe:
+        @ECHO.
+!IF ($(FLAG) == "32bit XP Version")     # For XP and Win10
+        @ECHO --- haCryptQuickSTD_XP.exe not required, not built. ---
+!ELSE                                   # For Win10 only
+        @ECHO --- haCryptQuickSTD64.exe not required, not built. ---
+!ENDIF
+
+
+!ELSE # (THEME = default)
+#------------------------------------------------------------------------------
+#
+#               $(PROJ)Fast target build (THEME = Default)
+#
+$(FOLDER)$(PROJ)Fast.exe:       $(OBJECTS)
+#
+# Detect if "haCrypt" is running. It must be terminated before rebuild.
+# ":" should appear in TASKLIST output only if the task is NOT found,
+# Hence FIND will set the ERRORLEVEL to 0 for 'not found' and 1 for 'found'.
+#
+!IF ([tasklist /NH /FI "IMAGENAME eq $(PROJ).exe" | FIND ":" > nul] == 1)
+        -TASKKILL /F /IM $(@B:Fast=).exe > nul
+!ENDIF
+!IF ($(FLAG) == "32bit XP Version")     # For XP and Win10
+        @ECHO Build: $(@F:Fast=), $(@F:Fast=_XP) - Windows XP and Win10 Compatible $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@B:Fast=_XP).exe $** $(LIBS) >$(FOLDER)$(@B)_XP.link
+        copy /Y $(FOLDER)$(@B:Fast=_XP).exe $(FOLDER)$(@F:Fast=) >nul
+        @ECHO Build Complete: $(FOLDER)$(PROJ).EXE - $(FLAG)
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        32
+! ENDIF
+!ELSE                                   # For Win10 only
+        @ECHO Build: $(@F:Fast=64) - Windows 10 only $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@B:Fast=64).exe $** $(LIBS) >$(FOLDER)$(@B)64.link
+        @ECHO Build Complete: $(FOLDER)$(@B:Fast=64).EXE - $(FLAG)
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        64
+! ENDIF
+!ENDIF
+        DEL $(CLEAN)
+        @ECHO.
+
+#------------------------------------------------------------------------------
+#
+#               $(PROJ)Quick target build (THEME = Default)
+#
+$(FOLDER)$(PROJ)AlgoMQ.obj:     $(FOLDER)$(PROJ)AlgoM.cpp $(FOLDER)$(PROJ).h
+        @ECHO Build: $(@F) - $(FLAG)
+        CL /DDES_AES_QUICK $(CFLAGS) /Fo$@ $(FOLDER)$(PROJ)AlgoM.cpp
+        @ECHO.
+
+$(FOLDER)$(PROJ)Quick.exe:      $(OBJECTSQUICK)
+#
+# Detect if "haCrypt" is running. It must be terminated before rebuild.
+# ":" should appear in TASKLIST output only if the task is NOT found,
+# Hence FIND will set the ERRORLEVEL to 0 for 'not found' and 1 for 'found'.
+#
+!IF ([tasklist /NH /FI "IMAGENAME eq $(PROJ)Quick_XP.exe" | FIND ":" > nul] == 1)
+        -TASKKILL /F /IM $(@B)_XP.exe > nul
+!ENDIF
+!IF ($(FLAG) == "32bit XP Version")     # For XP and Win10
+        @ECHO Build: $(@F) - Windows XP and Win10 Compatible $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@B)_XP.exe $** $(LIBS) >$(FOLDER)$(@B)_XP.link
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        32Q
+! ENDIF
+!ELSE                                   # For Win10 only
+        @ECHO Build: $(@F:Quick=Quick64) - Windows 10 only $(FLAG)
+        LINK $(LFLAGS)  /OUT:$(FOLDER)$(@B)64.exe $** $(LIBS) >$(FOLDER)$(@B)64.link
+! IFDEF SETVERSION
+        Cscript //nologo $(FOLDER)SetVersion.vbs        64Q
+! ENDIF
+!ENDIF
+        DEL $(CLEAN)
+        @ECHO.
+        @ECHO Build Complete: $(FOLDER)$(PROJ)*.EXE - $(FLAG)
+
+!ENDIF # THEME, TB_STANDARD
+
+# -----------------------------  END OF MAKEFILE ----------------------------
