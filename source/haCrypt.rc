@@ -1,0 +1,1044 @@
+// haCrypt - Crypto tool for DES, AES, TDEA and RSA.
+// haCrypt.rc - Developer resource script.
+// (c)2021 by helmut altmann
+
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; see the file COPYING.  If not, write to
+// the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+// Boston, MA 02111-1307, USA.
+
+#include "windows.h"
+#include "haCrypt.h"
+
+#ifdef THEME    // Visual style of actual Windows Version ('rc /dTHEME hacrypt.rc')
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "haCryptALL.exe.manifest"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////   
+//
+//                  ICONs (Customized toolbar buttons)
+//
+// All Icons generated with transparent background using 'GIMP.EXE 2.10.28'
+//
+IDI_HACRYPT_ICON ICON  "_haCryptSymbol32x32.ico" // Program Symbol Icon
+IDI_HAABOUT      ICON  "_haCryptSymbol16x16.ico" // Program Symbol Icon (Toolbar)
+
+ID_HELP_ABOUT_QUICKBMP BITMAP "_haHelpQuick.bmp" // A complete image for Help Menu
+
+IDI_TXTNEW      ICON   "_haNewFile16x16.ico"
+IDI_TXTOPN      ICON   "_haOpenFile16x16.ico"
+IDI_TXTSAV      ICON   "_haSaveFile16x16.ico"
+
+IDI_DESE        ICON   "_haDesE16x16.ico"
+IDI_3DESE       ICON   "_ha3DesE16x16.ico"
+IDI_AESE        ICON   "_haAesE16x16.ico"
+IDI_AESMAC      ICON   "_haAesMac16x16.ico"
+IDI_CRYENC      ICON   "_haLock16x16.ico"
+IDI_CRYDEC      ICON   "_haUnlock16x16.ico"
+IDI_CRYMAC      ICON   "_haMac16x16.ico"
+IDI_CRYSAV      ICON   "_haSaveCryptfile16x16.ico"
+IDI_CRYREDO     ICON   "_haRedo16x16.ico"
+IDI_INVISIBLE   ICON   "_haInvisible16x16.ico"
+IDI_CONSOLE     ICON   "_haConsole16x16.ico"
+IDI_DOS_HEDIT   ICON   "_haDosHedit16x16.ico"
+IDI_EXIT        ICON   "_haCryptSymbolExit16x16.ico"
+
+// Icons *.bmp generated from *.ico without transparent background using 'Paint.exe'
+//
+IDB_HAABOUT    BITMAP "_HACRYPT_ICON.BMP\_haCryptSymbol16x16.bmp"
+
+IDB_TXTNEW     BITMAP "_HACRYPT_ICON.BMP\_haNewFile16x16.bmp"
+IDB_TXTOPN     BITMAP "_HACRYPT_ICON.BMP\_haOpenFile16x16.bmp"
+IDB_TXTSAV     BITMAP "_HACRYPT_ICON.BMP\_haSavefile16x16.bmp"
+
+IDB_DESE       BITMAP "_HACRYPT_ICON.BMP\_haDesE16x16.bmp"
+IDB_AESE       BITMAP "_HACRYPT_ICON.BMP\_haAesE16x16.bmp"
+IDB_3DESE      BITMAP "_HACRYPT_ICON.BMP\_ha3DesE16x16.bmp"
+IDB_CRYENC     BITMAP "_HACRYPT_ICON.BMP\_haLock16x16.bmp"
+IDB_CRYDEC     BITMAP "_HACRYPT_ICON.BMP\_haUnlock16x16.bmp"
+IDB_CRYMAC     BITMAP "_HACRYPT_ICON.BMP\_haMac16x16.bmp"
+IDB_CRYREDO    BITMAP "_HACRYPT_ICON.BMP\_haRedo16x16.bmp"
+IDB_CRYSAV     BITMAP "_HACRYPT_ICON.BMP\_haSaveCryptfile16x16.bmp"                                        
+                                                                                                   
+////////////////////////////////////////////////////////////////////////////////
+//
+//                            Info and Help Text
+//
+// Note: !! The maximum Length of text is restricted to 256 chars only !!
+//
+haCryptSymbol   ICON DISCARDABLE   "_haCryptSymbol32x32.ico" // Define Icon displayed in Help Menus
+
+// DES
+IDD_ABOUT_DES DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"    // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: DES Mode.",
+    IDC_STATIC, 37, 7, 320, 100   // Frame position & size
+ 
+    LTEXT " Performs encryption and decryption using the Data Encryption Standard.\n\n \
+The key can be 8 bytes max. The effective key length is 56 bits,\n \
+i.e. parity bits of the key are ignored. Short keys expand with 0s.\n \
+Optional init vector for CBC mode (Dflt IV=0)." 
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+// TDES
+IDD_ABOUT_TDES DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"    // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: 3DES Mode (TDES, TDEA).",
+    IDC_STATIC, 37, 7, 320, 100   // Frame position & size
+ 
+    CTEXT "Performs encryption & decryption using the Triple DES Algorithm.\n\n\
+The key can be 24 bytes max, with an effective length of 168 bits,\n\
+i.e. parity bits of the key are ignored. Short keys expand with 0s.\n\
+Optional init vector for CBC mode (Dflt IV=0)." 
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+// AES
+IDD_ABOUT_AES DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"    // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: AES Mode.",
+    IDC_STATIC, 37, 7, 320, 100   // Frame position & size
+ 
+    CTEXT "Performs encryption and decryption using the Advanced Encryption Standard.\n\n\
+Typed keys can be 24 bytes (keysize: 128 | 192 bits). Use a keyfile for 256 bits.\n\
+Short keys will be zero-expanded.\n\
+The init vector is optional for CBC mode (Default IV = NULL)." 
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+
+// RSA
+IDD_ABOUT_RSA DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2022 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: RSA Mode.",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    CTEXT "RSA is an asymmetric key cryptographic algorithm.\n\n\
+Used to secure sensitive information (e.g symmetric keys)\n\
+sent over an insecure network or the Internet.\n\
+It needs both, private and public key.\n\
+(RSA-keysize: 256 bits, RSA-datasize <= 496 bytes)."
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+//Ciphertext stealing
+IDD_ABOUT_CIPH_STEALING DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: Ciphertext stealing (ECB, CBC Modes).",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    CTEXT "Ref.: Addendum to NIST Special Publication 800-38A\n\n\
+Unlike padding the method of 'Ciphertext Stealing'\n\
+avoids ciphertext expansion.\n\
+Ciphertext and plaintext always have the same size.\n\
+Padding bits are taken from the penultimate ciphertext block."
+
+    IDC_CIPH_STEALING, 40, 40, 300, 50                             // Help field position & size
+END
+
+//Padding Scheme ISO
+IDD_ABOUT_PADDING_ISO DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program - ISO Padding scheme (e.g. BlockSize = 8).",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    LTEXT " ISO/IEC 7816-4 padding []:\n \
+80               7 bytes: CFCFCFCFCFCFCF[80]\n \
+80 00 \n \
+80 00 00         5 bytes: CFCFCFCFCF[800000]\n \
+80 00 00 00 \n \
+80 00 00 00 00   3 bytes: CFCFCF[8000000000] \n \
+etc.             8 bytes: CFCFCFCFCFCFCFCF[8000000000000000]"
+
+    IDC_PADDING_ISO, 40, 36, 300, 70                               // Help field position & size
+END
+
+//Padding Scheme PKCS
+IDD_ABOUT_PADDING_PKCS DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program - PKCS#5 Padding scheme (e.g. BlockSize = 8).",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    LTEXT " PKCS#5 padding []:\n \
+01               7 bytes: CFCFCFCFCFCFCF[01]\n \
+02 02\n \
+03 03 03         5 bytes: CFCFCFCFCF[030303]\n \
+04 04 04 04\n \
+05 05 05 05 05   3 bytes: CFCFCF[0505050505]\n \
+etc.             8 bytes: CFCFCFCFCFCFCFCF[0808080808080808]"
+
+    IDC_PADDING_PKCS, 40, 36, 300, 70                              // Help field position & size
+END
+
+
+//MAC
+IDD_ABOUT_MAC DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: MAC Mode (CMAC NIST SP 800-38B).",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    CTEXT "A Message Authentication Code (MAC) is calculated from srcfile.\n\n.\
+The MAC can be appended to the plaintext as a cryptographic signature.\n\
+This allows detection of changes to the signed plaintext.\n\
+Optional Chaining Vector (Standard IV = NULL)." 
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+
+//Console
+IDD_ABOUT_CONSOLE DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: Console Mode.",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    LTEXT " The DOS application 'Hedit.exe' must reside together with 'haCrypt.exe' \
+in the same directory.\n\n \
+NOTES on 'Hedit.exe':\n \
+No spaces allowed in Paths-/Filenames.\n \
+File-extensions limited to 3 characters (DOS convention).\n \
+Capable of running crypto batches."
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+
+//Multiple files
+IDD_ABOUT_MULTIFILE DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " haCrypt Info"
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "Multiple files selection - File extensions *.??? used for crypto modes.",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    LTEXT "\n \
+AES /ECBENCRYPT:  .A_e     AES /ECBDECIPHER: .A_d\n \
+AES /ENCRYPT:     .A~e     AES /DECIPHER:    .A~d\n \
+AES /ECBE /CBCE:  .A°e     AES /ECBD /CBCD:  .A°d\n \
+AES /MAC:         .A~m\n \
+DES:  .A?? => .D??\n \
+3DES: .A?? => .3??"
+
+    IDC_MULTIFILE, 40, 36, 300, 70                                 // Help field position & size
+END
+
+//Keyfile
+IDD_ABOUT_KEYFILE DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " haCrypt Info"
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" .. "Ms Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "Crypto modes - Keyfile and IV-file usage.",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    LTEXT "\n \
+A Key or an Initial Chaining Vector (IV) can be loaded from a file.\n \
+Such a file may be composed of binaries (eg. 0x00, 0xFE..)\n \
+that normally can't be typed in the key/IV-dialog fields.\n \
+To overwrite loaded keys type a new key/IV and press <Enter>."
+
+    IDC_KEYFILE, 40, 36, 300, 70                                   // Help field position & size
+END
+
+//Text field
+IDD_ABOUT_TEXTFIELD DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " haCrypt Info"
+FONT 8, "Courier New"           // "Courier New" .. "Microsoft Sans Serif" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "Text field usage - Text field editing restrictions.",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    CTEXT "\n\
+The editable text in the 'Text field' is restricted to 29K.\n\
+Text files greater than 29K are loaded 'read only'.\n\
+Limited edit capability is provided to\n\
+create password vaults, examine crypto data, etc.\n\n\
+Crypto data displayed as text is truncated at 4K."
+
+    IDC_TEXTFIELD, 40, 36, 300, 70                                 // Help field position & size
+END
+
+//ABOUT
+IDD_ABOUT DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 165, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: haCrypt security advice.",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    CTEXT "This utility is fast!\n\
+Be careful keeping your keys privately at a secure place.\n\
+Never send an encrypted file and its secret key through the same channel.\n\
+Consider security before saving deciphered data.\n\n\
+Press the right mouse button for more options."
+
+    IDC_STATIC, 40, 40, 300, 50                                    // Help field position & size
+END
+
+//VERSION
+IDD_ABOUT_VERSION DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Microsoft Sans Serif"  // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: Build information.",
+    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+ 
+    CTEXT           L"haCryptSTD_XP V1.3.1 (xxbit)  Build: 0000000.000000  ", // 'L' for UNICODE
+    IDC_SHOWVERSION, 40, 40, 300, 50  
+END
+
+//Quick Instructions
+IDD_ABOUT_QUICK DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION // | WS_SYSMENU  // No X-Button
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+//ha//    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+//ha//    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+//ha//
+//ha//    GROUPBOX        "About this program: Quick instructions for usage of toolbar buttons.",
+//ha//    IDC_STATIC, 37, 7, 320, 100 // Frame position & size
+//ha// 
+//ha//    LTEXT " 1. Select a crypto algorithm and enter a key\n \
+//ha//2. Open file: Push button [/Encrypt..] - crypto-data display\n \
+//ha//3. Save: Push button [Save encrypted..]\n \
+//ha//4. Load encrypted file: Push button [/Decipher..] - data display\n \
+//ha//5. Save: Push button [Save deciphered..]"
+//ha//
+//ha//    IDC_TEXT_QUICK, 40, 40, 300, 50                          // Help field position & size
+
+    // Embed the fancy "_haHelpQuick.bmp" file as a backround wallpaper instead  
+    CONTROL         ID_HELP_ABOUT_QUICKBMP, ID_HELP_ABOUT_QUICKBMP, "Static",
+                    SS_BITMAP | SS_CENTERIMAGE | SS_REALSIZEIMAGE,
+                    0, 0, 403, 120
+
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+END
+
+//Aes encrypt edited text, Quick Instructions
+IDD_ABOUT_AESQUICK DIALOG DISCARDABLE 30, 2, 400, 130  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2022 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" .. "Microsoft Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: AES encrypt edited text.",
+    IDC_STATIC, 37, 7, 320, 110 // Frame position & size
+ 
+    LTEXT "\n\
+Recommended usage: Password Vault\n\n\
+Select [AES] and enter a key\n\
+Push button [/TEXT Editor-Mode]\n\
+Type your ansi text.\n\
+On toolbar click the right mouse button.\n\
+Select [AES encrypt edited text].\n\
+Save encrypted data [Yes]."
+
+    IDC_TEXT_AESQUICK, 40, 40, 200, 80                             // Help field position & size
+END
+
+//RSA Quick Instructions
+IDD_ABOUT_RSAQUICK DIALOG DISCARDABLE 30, 2, 400, 130  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2022 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" .. "Microsoft Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 18, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "About this program: RSA Mode.",
+    IDC_STATIC, 37, 7, 320, 110 // Frame position & size
+ 
+    LTEXT "Persons A and B exchange secret key Ks\n\
+A: generate RSA keys\n\
+A: save private key Kpr -> A\n\
+A: send public key Kpu -> B\n\
+B: generate random key Ks\n\
+B: encrypt Ks with Kpu -> Ke\n\
+B: send Ke -> A\n\
+A: decipher Ke with Kpr -> Ks\n\
+A+B: share Ks for DES/AES/3DES"
+
+    IDC_TEXT_RSAQUICK, 40, 40, 200, 80                             // Help field position & size
+END
+
+// Test & Verification
+// Development support - Verify the result of crypto data samples 
+// Crypto algorithm specs usually provide so called
+// 'Known Answer Tests (KAT)' data sets rendered as AscHex text.
+// Verification:  
+// - Choose the appropriate mode from Crypto menu
+// - Paste Key, IV, Plaintext into the edit field
+// - Apply the KAT data accordingly
+// - Verify the result 
+
+IDD_ABOUT_TEST DIALOG DISCARDABLE 30, 2, 400, 120  // Window position & SIze on screen (X,Y,Wdth,Hght)
+STYLE DS_MODALFRAME | WS_POPUP | WS_SYSMENU | WS_CAPTION
+CAPTION " Crypto Application, haCrypt.exe (c)2021 by ha."
+FONT 8, "Courier New"           // "Courier New" .. "MS Sans Serif" ..
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 174, 22, 50, 14                    // Button position & size
+    ICON            "haCryptSymbol", IDC_STATIC, 7, 10, 20, 20     // Icon position & size
+
+    GROUPBOX        "Crypto algorithm development support - Verification of given data samples",
+    IDC_STATIC, 37, 7, 320, 105 // Frame position & size
+ 
+    LTEXT " Crypto specs often provide a 'Known Answer Test (KAT)'\n \
+with binary data sets given as AscHex text.\n\n \
+KAT:\n \
+- Crypto: Choose an algo mode\n \
+- KAT: Paste Key, IV, Plaintext into the Text-field\n \
+- AscHex2Bin: Apply the data successively\n \
+- Text-field: Result"
+
+    IDC_TEST, 40, 40, 300, 70                                      // Help field position & size
+END
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//                       Main menu: File
+//                                      
+// Note: The "&-prefix" defines a letter that will be underlined when 
+// pressing 'Alt' on the keyboard. Alt+Letter alternatively invokes the Menu.
+//
+IDR_MAINMENU MENU DISCARDABLE           // Main menu
+BEGIN                                   
+    POPUP "&File"                       // 0: Main menu 'File'
+    BEGIN
+        MENUITEM "&New",              ID_FILE_TEXT_NEW
+        MENUITEM "&Open...",          ID_FILE_TEXT_OPEN
+        MENUITEM "&Save as...",       ID_FILE_TEXT_SAVEAS, GRAYED  // Initially disabled ('grayed')
+        MENUITEM SEPARATOR
+        MENUITEM "&Rename file type", ID_FILE_TEXT_RENAME
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",             ID_FILE_EXIT
+    END // &File
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//                       Main menu: Crypto
+//                                      
+    POPUP "&Crypto"                     // 1: Main menu 'Crypto'
+    BEGIN
+        POPUP "&DES"                    // [0]: Submenu DES
+        BEGIN
+            MENUITEM "DES /Encrypt (CBC Ciphertext stealing)",      ID_CRYPTO_DES_ENCRYPT 
+            MENUITEM "DES /Decipher (CBC Ciphertext stealing)",     ID_CRYPTO_DES_DECIPHER
+            MENUITEM "DES /ECB&Encrypt (ECB Ciphertext stealing)",  ID_CRYPTO_DES_ECBENCRYPT 
+            MENUITEM "DES /ECB&Decipher (ECB Ciphertext stealing)", ID_CRYPTO_DES_ECBDECIPHER
+            MENUITEM SEPARATOR
+            MENUITEM "DES /ECBE (ISO/IEC 7816-4 padding)",     ID_CRYPTO_DES_ECBE
+            MENUITEM "DES /ECBD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_DES_ECBD
+            MENUITEM "DES /CBCE (ISO/IEC 7816-4 padding)",     ID_CRYPTO_DES_CBCE
+            MENUITEM "DES /CBCD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_DES_CBCD
+            MENUITEM SEPARATOR
+            MENUITEM "DES /ECBE (PKCS padding)",     ID_CRYPTO_DES_ECBE_PKCS
+            MENUITEM "DES /ECBD (PKCS padding)",     ID_CRYPTO_DES_ECBD_PKCS
+            MENUITEM "DES /CBCE (PKCS padding)",     ID_CRYPTO_DES_CBCE_PKCS
+            MENUITEM "DES /CBCD (PKCS padding)",     ID_CRYPTO_DES_CBCD_PKCS
+            MENUITEM SEPARATOR
+            MENUITEM "DES /&MAC (CMAC NIST SP 800-38B)",  ID_CRYPTO_DES_MAC
+            MENUITEM SEPARATOR
+            MENUITEM "DES &Save as...",      ID_FILE_CRYPT_DES_SAVEAS, GRAYED     
+        END // &DES
+
+        POPUP "&3DES"                   // [1]: Submenu 3DES (TDES)
+        BEGIN
+            MENUITEM "TDES /&Encrypt (CBC Ciphertext stealing)",    ID_CRYPTO_TDES_ENCRYPT 
+            MENUITEM "TDES /&Decipher (CBC Ciphertext stealing)",   ID_CRYPTO_TDES_DECIPHER
+            MENUITEM "TDES /ECBEncrypt (ECB Ciphertext stealing)",  ID_CRYPTO_TDES_ECBENCRYPT  
+            MENUITEM "TDES /ECBDecipher (ECB Ciphertext stealing)", ID_CRYPTO_TDES_ECBDECIPHER 
+            MENUITEM SEPARATOR
+            MENUITEM "TDES /ECBE (ISO/IEC 7816-4 padding)       ",     ID_CRYPTO_TDES_ECBE
+            MENUITEM "TDES /ECBD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_TDES_ECBD
+            MENUITEM "TDES /CBCE (ISO/IEC 7816-4 padding)",     ID_CRYPTO_TDES_CBCE
+            MENUITEM "TDES /CBCD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_TDES_CBCD
+            MENUITEM SEPARATOR
+            MENUITEM "TDES /ECBE (PKCS padding)",     ID_CRYPTO_TDES_ECBE_PKCS
+            MENUITEM "TDES /ECBD (PKCS padding)",     ID_CRYPTO_TDES_ECBD_PKCS
+            MENUITEM "TDES /CBCE (PKCS padding)",     ID_CRYPTO_TDES_CBCE_PKCS
+            MENUITEM "TDES /CBCD (PKCS padding)",     ID_CRYPTO_TDES_CBCD_PKCS
+            MENUITEM SEPARATOR
+            MENUITEM "TDES /&MAC (CMAC NIST SP 800-38B)",  ID_CRYPTO_TDES_MAC
+            MENUITEM SEPARATOR
+            MENUITEM "TDES &Save as...",     ID_FILE_CRYPT_TDES_SAVEAS, GRAYED
+        END // &3DES
+
+        POPUP "&AES"                    // [2]: Submenu AES
+        BEGIN
+            MENUITEM "AES /&Encrypt (CBC Ciphertext stealing)",    ID_CRYPTO_AES_ENCRYPT 
+            MENUITEM "AES /&Decipher (CBC Ciphertext stealing)",   ID_CRYPTO_AES_DECIPHER
+            MENUITEM "AES /ECBEncrypt (ECB Ciphertext stealing)",  ID_CRYPTO_AES_ECBENCRYPT  
+            MENUITEM "AES /ECBDecipher (ECB Ciphertext stealing)", ID_CRYPTO_AES_ECBDECIPHER 
+            MENUITEM SEPARATOR
+            MENUITEM "AES /ECBE (ISO/IEC 7816-4 padding)",     ID_CRYPTO_AES_ECBE
+            MENUITEM "AES /ECBD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_AES_ECBD
+            MENUITEM "AES /CBCE (ISO/IEC 7816-4 padding)",     ID_CRYPTO_AES_CBCE
+            MENUITEM "AES /CBCD (ISO/IEC 7816-4 padding)",     ID_CRYPTO_AES_CBCD
+            MENUITEM SEPARATOR
+            MENUITEM "AES /ECBE (PKCS padding)",     ID_CRYPTO_AES_ECBE_PKCS
+            MENUITEM "AES /ECBD (PKCS padding)",     ID_CRYPTO_AES_ECBD_PKCS
+            MENUITEM "AES /CBCE (PKCS padding)",     ID_CRYPTO_AES_CBCE_PKCS
+            MENUITEM "AES /CBCD (PKCS padding)",     ID_CRYPTO_AES_CBCD_PKCS
+            MENUITEM SEPARATOR
+            MENUITEM "AES /&MAC (CMAC NIST SP 800-38B)",  ID_CRYPTO_AES_MAC                     
+            MENUITEM SEPARATOR
+            MENUITEM "AES &Save as...",       ID_FILE_CRYPT_AES_SAVEAS, GRAYED
+        END // &AES
+
+        POPUP "&RSA"     // [3]: Submenu RSA
+        BEGIN
+            MENUITEM " RSA /&Generate keys",        ID_CRYPTO_RSA_GENERATE_KEYS // Includes export/save RSA keys
+            MENUITEM " RSA /&Import public key",    ID_CRYPTO_RSA_GETPUBLIC_KEY
+            MENUITEM " RSA /&Load private key",     ID_CRYPTO_RSA_GETPRIVATE_KEY
+            MENUITEM " RSA /&Encrypt",              ID_CRYPTO_RSA_ENCRYPT
+            MENUITEM " RSA /&Decipher",             ID_CRYPTO_RSA_DECIPHER
+            MENUITEM SEPARATOR
+            MENUITEM " RSA /Generate &random key128",  ID_CRYPTO_RSA_GEN_RNDKEY128
+            MENUITEM " RSA /Generate &random key256",  ID_CRYPTO_RSA_GEN_RNDKEY256
+        END // &RSA
+    END // &Crypto                                                                                                         
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//                       Main menu: Console
+//                                      
+    POPUP "C&onsole", GRAYED            // 2: Main menu 'Console'
+    BEGIN
+        MENUITEM "&DOS Hedit /?",             ID_CONSOLE_HEDIT
+        MENUITEM "DOS &Hedit filename",       ID_CONSOLE_HEDIT_FILEOPEN                         
+        MENUITEM "DOS Hedit &crypto cmdline", ID_CONSOLE_HEDIT_CRYPT
+    END
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//                       Main menu: Keyfile
+//                                      
+    POPUP "&Keyfile" //, GRAYED         // 3: Main menu 'Keyfile'
+    BEGIN
+        MENUITEM "Open &Keyfile",       ID_KEYFILE_OPEN
+        MENUITEM "Open &IV-file",       ID_IVFILE_OPEN
+    END
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//                       Main menu: Help
+//                                      
+    POPUP "&Help"                       // 4: Main menu 'Help'
+    BEGIN
+        POPUP "&Quick Instructions"     // [0]: Submenu Usage
+        BEGIN
+            MENUITEM "&DES/AES/3DES Quick Instructions", ID_HELP_ABOUT_QUICK
+            MENUITEM "&AES encrypt edited text",         ID_HELP_ABOUT_AESQUICK
+            MENUITEM "&RSA Quick Instructions",          ID_HELP_ABOUT_RSAQUICK
+        END // Quick Instructions
+        POPUP "&Usage"                  // [1]: Submenu Usage
+        BEGIN
+            MENUITEM "&DES",            ID_HELP_ABOUT_DES 
+            MENUITEM "&3DES",           ID_HELP_ABOUT_TDES 
+            MENUITEM "&AES",            ID_HELP_ABOUT_AES
+            MENUITEM "&RSA",            ID_HELP_ABOUT_RSA
+            MENUITEM SEPARATOR
+            MENUITEM "Chiphertext &stealing", ID_HELP_ABOUT_CIPH_STEALING
+            MENUITEM "&ISO Padding",          ID_HELP_ABOUT_PADDING_ISO
+            MENUITEM "&PKCS Padding",         ID_HELP_ABOUT_PADDING_PKCS
+            MENUITEM SEPARATOR
+            MENUITEM "&MAC",            ID_HELP_ABOUT_MAC
+            MENUITEM SEPARATOR
+            MENUITEM "&Console",        ID_HELP_ABOUT_CONSOLE
+        END // Usage
+    MENUITEM SEPARATOR
+    MENUITEM "&Multiple files",         ID_HELP_ABOUT_MULTIFILE
+    MENUITEM "&Keyfile",                ID_HELP_ABOUT_KEYFILE
+    MENUITEM "&Text field",             ID_HELP_ABOUT_TEXTFIELD
+    MENUITEM SEPARATOR
+    MENUITEM "Test",                    ID_HELP_ABOUT_TEST
+    MENUITEM SEPARATOR
+    MENUITEM "&Version info",           ID_HELP_ABOUT_VERSION // Version Build info
+    MENUITEM "&About",                  ID_HELP_ABOUT         // Info About haCrpt.exe
+    END // &Help
+
+END // IDR_MAINMENU
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                      MultiFile Dialog: File existence  
+//
+IDD_HACRYPT_FILEC DIALOG DISCARDABLE         0,  0,275,102  // 0,  0,275,102
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP // | WS_CAPTION | WS_SYSMENU
+//CAPTION L" Confirm file overwrite"    // Unicode string (use a preceeding 'L')
+CAPTION " Confirm file overwrite"       // Ascii string
+FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                   // Lft,Top,Wdh,Hgt 
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              7, 10, 20, 20  // Icon position & size
+
+    LTEXT           "File already exists.\n\n\
+Do you want to replace this file?",
+                    IDC_STATIC,             35, 10,250, 30
+
+    LTEXT           "",
+                    IDC_FILE_EXIST,         35, 40,260, 40
+
+    PUSHBUTTON      "&Yes",                                 // Default on ENTER key
+                    IDC_HACRYPT_YES,         7, 80, 50, 14   
+
+    PUSHBUTTON      "Yes to all",
+                    IDC_HACRYPT_YESALL,     60, 80, 50, 14
+
+    PUSHBUTTON      "&No",
+                    IDC_HACRYPT_NO,        113, 80, 50, 14
+
+    PUSHBUTTON      "No to all",
+                    IDC_HACRYPT_NOALL,     166, 80, 50, 14
+
+    PUSHBUTTON      "&Cancel",
+                    IDC_HACRYPT_CANCEL,    219, 80, 50, 14
+
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//     Ascii-Hexadecimal to Binary Dialog: Crypto vector testing  
+//
+// Example:
+// int msgID = CustomMessageBox(
+// hMain,
+// _T(" Service for verfification of test vectors.\n\n \
+// After loading the binary data as key or IV\n \
+// choose an algorithm from the Crypto-Menu and\n \
+// press the [Set Key][Set IV] buttons to check values.\n\n \
+// Keep binary data as..."),
+// _T(" Ascii-Hexadecimal to Binary conversion"),
+// MB_OK, IDI_HACRYPT_ICON);
+//
+// This Dialogbox has the X-Button on the upper right corner  for cancel:                                
+//  STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_SYSMENU & ~WS_CAPTION
+// 
+IDD_HACRYPT_ASCHEX2BIN DIALOG DISCARDABLE    0,  0,276,130  // 0,  0,276,130
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_SYSMENU & ~WS_CAPTION  // With X-Button
+//CAPTION L" Confirm file overwrite"       // Unicode string (use a preceeding 'L')
+CAPTION " Ascii-Hexadecimal to Binary conversion"       // Ascii string
+FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                   // Lft,Top,Wdh,Hgt 
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              7, 10, 20, 20  // Icon position & size
+
+    LTEXT           "Service for verfification of test vectors.\n\n\
+1. Choose an algorithm from the Crypto-Menu\n\
+2. Apply converted binary data as [Key] or [IV]\n\
+3. [Plaintext] - Apply crypto algo to converted binary data.\n\
+4. [Save] binary data into a file."
+                    IDC_STATIC,             35,  8,250, 80   // 35,  8,250, 80
+
+    LTEXT           "---Last selection Crypto-Menu---",
+                    IDC_LAST_CRYPTO,        35, 60,260, 60   // 35, 60,260, 60
+
+    LTEXT           "Process binary data as...",
+                    IDC_STATIC,             35, 93,260, 40   // 35, 93,260, 40
+
+    PUSHBUTTON      "&Plaintext",                            // =Default on ENTER key
+                    IDC_TEST_PLAINTEXT,      7,108, 50, 14   // 32,108, 50, 14 
+
+    PUSHBUTTON      "&Key",
+                    IDC_TEST_KEY,           60,108, 50, 14   // 86,108, 50, 14
+
+    PUSHBUTTON      "&IV",
+                    IDC_TEST_IV,           113,108, 50, 14   // 140,108, 50, 14
+
+    PUSHBUTTON      "&Save",
+                    IDC_TEST_SAVE,         166,108, 50, 14   // 140,108, 50, 14
+
+    PUSHBUTTON      "&Crypto",                               // "&Crypto" 
+                    IDC_TEST_CRYPTO,       219,108, 50, 14   // 194,108, 50, 14
+
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                       Dialog: Large File existence (depricated)
+//
+IDD_HACRYPT_FILECL DIALOG DISCARDABLE        0,  0,275,102  // X, Y, wdth, hght
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP // | WS_CAPTION | WS_SYSMENU
+CAPTION " Confirm large file overwrite"
+FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                   // Lft,Top,Wdh,Hgt 
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              7, 10, 20, 20  // Icon position & size
+
+    LTEXT           "Large file already exists.\n\n\
+Do you want to replace this file?",
+                    IDC_STATIC,             35, 10,250, 30
+
+    LTEXT           "",
+                    IDC_FILE_EXIST,         35, 40,260, 40
+
+    PUSHBUTTON      "&Yes",
+                    IDC_HACRYPT_YES,        85, 80, 50, 14   // Default if ENTER key
+
+    PUSHBUTTON      "&No",
+                    IDC_HACRYPT_NO,        140, 80, 50, 14
+
+END
+
+//ha///////////////////////////////////////////////////////////////////////////////
+//ha////
+//ha////                       Dialog: Confirm save as..
+//ha////
+//ha//IDD_HACRYPT_FILESAV DIALOG DISCARDABLE       0,  0,270,70  // X, Y, wdth, hght
+//ha//STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP // | WS_CAPTION | WS_SYSMENU
+//ha//CAPTION " Confirm save as.."
+//ha//FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+//ha//BEGIN                                   // Lft,Top,Wdh,Hgt 
+//ha//    ICON            "haCryptSymbol", 
+//ha//                    IDC_STATIC,              7, 10, 20, 20  // Icon position & size
+//ha//
+//ha//    LTEXT           "",
+//ha//                    IDC_FILE_EXIST,         35, 10,260, 40
+//ha//
+//ha//    PUSHBUTTON      "&Yes",                                  // Default if ENTER key
+//ha//                    IDC_HACRYPT_YES,        85, 40, 50, 14   
+//ha//
+//ha//    PUSHBUTTON      "&No",
+//ha//                    IDC_HACRYPT_NO,        140, 40, 50, 14
+//ha//
+//ha//END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                       Dialog: Confirm save as..
+//
+IDD_HACRYPT_FILESAV DIALOG DISCARDABLE       0,  0,275,92  // X, Y, wdth, hght
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP // | WS_CAPTION | WS_SYSMENU
+CAPTION " Confirm save as.."
+FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                   // Lft,Top,Wdh,Hgt 
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              7, 10, 20, 20  // Icon position & size
+
+    LTEXT           "File already exists.\nDo you want to replace this file?",
+                    IDC_STATIC,             35, 10,250, 30
+
+    LTEXT           "",
+                    IDC_LAST_CRYPTO,        35, 30,260, 40
+
+    PUSHBUTTON      "&Yes",
+                    IDC_HACRYPT_YES,        85, 65, 50, 14   // Default if ENTER key
+
+    PUSHBUTTON      "&No",
+                    IDC_HACRYPT_NO,        140, 65, 50, 14
+
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//          Multifile Dialog: Modify (large) file extensions
+//
+IDD_HACRYPT_FILEX DIALOG DISCARDABLE        0,  0,210, 33    // X, Y, wdth, hght
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP // | WS_CAPTION | WS_SYSMENU
+CAPTION " File extensions. Modify?"
+FONT 8, "Microsoft Sans Serif"         // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                  // Lft,Top,Wdh,Hgt
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,             2,  6, 15, 15    // Icon position & size
+
+    PUSHBUTTON      "&Continue", 
+                    IDC_CONTINUE,          90, 10, 50, 14    // Must stay here 1st to allow ENTER key
+
+    EDITTEXT        IDC_TEXT_X,            30, 10, 42, 14, 0 // X, Y, wdth, hght, style=0 
+
+    PUSHBUTTON      "&Cancel",
+                    IDC_HACRYPT_CANCEL,   150, 10, 50, 14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                 Browser Dialog: AES encrypt edited text 
+//
+// Example:
+//    CTEXT "The edited text has been encrypted with\n \
+// Mode = 'AES /Encrypt (CBC Ciphertext stealing)'.\n\n \
+// Text shorter than AES blocksize is appended with spaces.\n \
+// The current AES Key/IV settings have been used.\n \
+// You must remember these settings, because"
+//                    IDC_STATIC,             35, 10,200, 30
+//
+//    CTEXT "Mode and secret Key/IV are required\n \
+// to '/Decipher' the encrypted text\n \
+// residing in the saved file.\n\n \
+// Do You want to save the encrypted ascii text into a file?"
+//                    IDC_STATIC,             35, 58,200, 80
+//
+IDD_HACRYPT_EDITCRYPT DIALOG DISCARDABLE     0,  0,270,150    // X, Y, wdth, hght  // 0,  0, 270, 150
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP //| WS_CAPTION | WS_SYSMENU
+CAPTION " AES /Encrypt (CBC Ciphertext stealing)"
+FONT 8, "Microsoft Sans Serif"           // "MS Sans Serif" "Courier New"
+BEGIN                                    // X,  Y,wdth, hght
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              4,  6, 15, 15   // Icon position & size // 4,  6, 15, 15
+
+    CTEXT "The edited text has been encrypted with\n \
+Mode = 'AES /Encrypt (CBC Ciphertext stealing)'.\n\n"
+                    IDC_STATIC,             35, 10,200, 30   // 35, 10,200, 80
+
+    LTEXT           ""
+                    IDC_TEXT_AESKEY,        60, 28,200, 14, 0 // X, Y, wdth, hght, style=0  // 60, 28, 200, 14, 0
+    LTEXT           ""
+                    IDC_TEXT_AESIV,         60, 36,200, 14, 0 // X, Y, wdth, hght, style=0  // 60, 36, 200, 14, 0
+
+    CTEXT "Text shorter than AES blocksize is appended with spaces.\n \
+The current AES Key/IV settings have been used.\n \
+You must remember these settings, because"
+                    IDC_STATIC,             35, 50,200, 80   // 35, 50,200, 80
+
+    CTEXT "Mode and secret Key/IV are required\n \
+to '/Decipher' the encrypted data\n \
+residing in the saved file.\n\n \
+Do You want to save the encrypted data into a file?"
+                    IDC_STATIC,             35, 74,200,100  // 35, 74,200, 100
+
+    PUSHBUTTON      "&Yes", 
+                    IDC_HACRYPT_YES,        90,125, 50, 14  // 90,125, 50, 14
+
+    PUSHBUTTON      "&No",
+                    IDC_HACRYPT_NO,        150,125, 50, 14  // 150,125, 50, 14
+
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                 Browser Dialog: Rename file type 
+//
+IDD_HACRYPT_FILEXR DIALOG DISCARDABLE      0,  0, 190, 80    // X, Y, wdth, hght  //0,  0, 170, 80
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP// | WS_CAPTION | WS_SYSMENU// | WS_EX_TOPMOST
+CAPTION " Rename file extensions"
+FONT 8, "Microsoft Sans Serif"          // "MS Sans Serif" "Courier New"
+BEGIN                                   // X,  Y,wdth, hght
+    LTEXT           "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345678901", // Just a place holder
+                    IDC_SHOWFOLDER,       10,  8, 180,  8
+
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,            5, 21,  15, 15    // Icon position & size
+
+    EDITTEXT        IDC_TEXT_XNEW,       101, 25,  42, 13, 0  // X, Y, wdth, hght, style=0 
+    LTEXT           "*.New",IDC_STATIC,  103, 40,  30,  8     // Must stay here in place (EM_SETSEL in haCryptDialog.cpp))
+
+    EDITTEXT        IDC_TEXT_XOLD,        41, 25,  42, 13, 0  // X, Y, wdth, hght, style=0 
+    LTEXT           "*.Old",IDC_STATIC,   43, 40,  30,  8
+
+    PUSHBUTTON      "&Rename", 
+                    IDC_RENAME,           41, 55,  50, 13     // No default 
+
+    PUSHBUTTON      "&Cancel", 
+                    IDC_HACRYPT_CANCEL,  101, 55,  50, 13     // no default
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                      TEST Mode Error Dialog
+//
+IDD_HACRYPT_TEST_ERROR DIALOG DISCARDABLE    0,  0,250, 60    // X, Y, wdth, hght 0,  0,250, 60
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP
+CAPTION " TEST-MODE"
+FONT 8, "Microsoft Sans Serif"          // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                   // Lft,Top,Wdh,Hgt
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,              5,  6, 15, 15    // 5,  6, 15, 15 Icon position & size
+
+    CTEXT "TEST-MODE ERROR:\nSelect a mode from Crypto-Menu and then continue."
+                    IDC_STATIC,             30, 10,200, 30   // 30, 10,200, 30
+
+    PUSHBUTTON      "OK", 
+                    IDC_HACRYPT_YES,       100, 35, 50, 14    // 100, 35, 50, 14 Default if ENTER key
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                      TEST Mode Keep Dialog
+//
+// Example (see haCryptDialog.cpp):
+//  LTEXT Keyfile = TEST-KEY
+//  LTEXT IV-file = TEST-IV
+//  LTEXT " DES /Encrypt\n \
+// (CBC Ciphertext stealing)\n \
+// Apply last selection from Crypto-Menu.",
+//                  IDC_STATIC,      43, 15,200, 30
+//
+// This Dialogbox has the X-Button on the upper right corner  for cancel:                                
+//  STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_SYSMENU & ~WS_CAPTION
+// 
+IDD_HACRYPT_TEST_KEEP DIALOG DISCARDABLE     0,  0,200, 113    // X, Y, wdth, hght -  0,  0,200, 113
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_SYSMENU & ~WS_CAPTION  // With X-Buuton
+CAPTION " TEST-MODE"
+FONT 8, "Microsoft Sans Serif"          // FONT 8 "Courier New".. "MS Sans Serif".. "Microsoft Sans Serif"..
+BEGIN                                   // Lft,Top,Wdh,Hgt
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,             12, 13, 15, 15     // 12, 13, 15, 15 Icon position & size
+
+    LTEXT           ""
+                    IDC_TEST_KEEPKEY,       45, 15,200, 14, 0 // X, Y, wdth, hght, style=0  // 45, 15,200, 14, 0
+    LTEXT           ""
+                    IDC_TEST_KEEPIV,        45, 23,200, 14, 0 // X, Y, wdth, hght, style=0  // 45, 23,200, 14, 0
+
+    LTEXT           ""
+                    IDC_TEST_KEEP,          43, 34,200, 30, 0 // X, Y, wdth, hght, style=0  // 43, 34,200, 30, 0
+
+    LTEXT " Keep the crypto text?",
+                    IDC_STATIC,             43, 67,200, 30    // 43, 67,200, 30
+
+    PUSHBUTTON      "Yes", 
+                    IDC_HACRYPT_YES,        13, 87, 53, 14    // 13, 87, 53, 14 Default if ENTER key
+
+    PUSHBUTTON      "No", 
+                    IDC_HACRYPT_NO,         73, 87, 53, 14    // 73, 87, 53, 14
+
+    PUSHBUTTON      "Crypto", 
+                    IDC_TEST_CRYPTO,       133, 87, 53, 14    // 133, 87, 53, 14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                      Keyboard ESC Dialog
+//
+IDD_HACRYPT_ESC DIALOG DISCARDABLE          0,  0,150, 33    // X, Y, wdth, hght
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP// | WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU
+CAPTION " ESC - Abort?"
+FONT 8, "Microsoft Sans Serif"         // "Courier New" .. "MS Sans Serif" ..
+BEGIN                                  // Lft,Top,Wdh,Hgt
+    ICON            "haCryptSymbol", 
+                    IDC_STATIC,             2,  6, 15, 15    // Icon position & size
+
+    PUSHBUTTON      "&Abort", 
+                    IDC_HACRYPT_YES,       30, 10, 50, 14    // Default if ENTER key
+
+    PUSHBUTTON      "&Continue", 
+                    IDC_HACRYPT_NO,        90, 10, 50, 14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//                      Key Dialog Context Menu
+//
+IDC_KEYDLG_CONTEXT MENU  //'PopupMenu MENU' (alternatively)                // Menu (see 'haCryptWin.cpp')
+BEGIN
+  //POPUP "Dummy Popup"  // Only if "Configuration..." should also appear 
+  //BEGIN
+        POPUP "Configuration..."  // Menu[0]: Submenu 'Configuration...;   // Submenu[0]
+        BEGIN
+            MENUITEM "&Hide key",                ID_HIDEKEY                // Submenu[0] Pos[0] MenuItem
+            MENUITEM "&Show key",                ID_SHOWKEY, CHECKED       // Submenu[0] Pos[1] MenuItem
+            MENUITEM SEPARATOR                                             // Submenu[0] Pos[2]
+            MENUITEM "&Fancy Toolbar",           ID_FANCYTOOLBAR_TOGGLE    // Submenu[0] Pos[3] MenuItem
+            MENUITEM "&ESC-Abort no query",      ID_ESC_ABORT_NOQUERY      // Submenu[0] Pos[4] MenuItem
+            MENUITEM SEPARATOR                                             // Submenu[0] Pos[5]
+            MENUITEM "&AES encrypt edited text", ID_CRYPTO_TOGGLE_TEXTEDIT // Submenu[0] Pos[6] MenuItem
+            POPUP "&Test"                                                  // Submenu[0] Pos[7]: Submenu[1] 'Test'
+            BEGIN
+                MENUITEM "Test: &Crypto edited text",     ID_CRYPTO_TEST_TEXTEDIT // Submenu[1] Pos[0]: Submenu[1] Pos[0] MenuItem
+                MENUITEM "Test: &AscHex2Bin edited text", ID_ASCHEX2BIN_TEXTEDIT  // Submenu[1] Pos[1]: Submenu[1] Pos[1] MenuItem
+            END
+            MENUITEM SEPARATOR                                                    // Submenu[0] Pos[8]
+            MENUITEM "&Multifile Results Browser", ID_CRYPTO_MFRESULT_BROWSER     // Submenu[0] Pos[9] MenuItem
+        END
+   //END
+END
+
+//ha////////////////////////////////////////////////////////////////////////////
+//
+//                           DESIGNINFO
+//
+//ha////////////////////////////////////////////////////////////////////////////
+
