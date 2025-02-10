@@ -1,0 +1,27 @@
+Key = 80 01 01 01 01 01 01 01 (56bits w/o parity bits)
+Plaintext  = 00 00 00 00 00 00 00 00 
+Ciphertext = 95 A8 D7 28 13 DA A9 4D
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+The DES Test can be run in ECB Mode:
+Key & Plaintext /ECBEncrypt --> CIPHERTEXT
+
+Example: How to use haCrypt Test-Mode /ECBEncrypt
+1) Menu: [Crypto] - [DES] - [DES /ECBEncrypt (ECB Ciphertext stealing)]
+   Since you do not want to process file(s) in test mode;
+    so, in case if the file browser opens, press cancel.
+
+2) Button: [/Text Editor-Mode]
+3) Copy/paste the DES key into text field
+     80 01 01 01 01 01 01 01          
+4) Context Menu (press the right mouse button on toolbar):
+   [Test] - [Test AscHex2Bin edited text] -- [Key]
+
+5) Button: [/Text Editor-Mode]
+6) Copy/paste the plaintext into the text field
+     00 00 00 00 00 00 00 00
+7) Context Menu (right mouse button):
+   [Test] - [Test AscHex2Bin edited text] -- [Plaintext]
+
+8) Finally the result is displayed in text field.
+     95 A8 D7 28 13 DA A9 4D 

@@ -1,0 +1,102 @@
+--------------------
+Sample #2 (AsciiHex)
+KEY1 = 37ae5ebf46dff2dc          
+KEY2 = 0754b94f31cbb385
+KEY3 = 5e7fd36dc870bfae
+IV = 3d1de3cc132e3b65
+PLAINTEXT =  84401f78fe6c1087 6d8ea23094ea5309  (AsciiHex)
+CIPHERTEXT = 7b1f7c7e3b1c948e bd04a75ffba7d2f5  (AsciiHex)
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+The 3DES (TDES) Test for sample #2 can be run in CBC Mode:
+Key1||Key2||Key3, IV & Plaintext /Encrypt --> CIPHERTEXT
+
+Example: How to use haCrypt Test-Mode for sample #2 in mode TDES /Encrypt
+1) Menu: [Crypto] - [3DES] - [TDES /Encrypt (CBC Ciphertext stealing)]
+   Since you do not want to process file(s) in test mode;
+    so, in case if the file browser opens, press cancel.
+
+2) Button: [/Text Editor-Mode]
+3) Copy/paste the TDES key1,key2,key3 into text field
+     37ae5ebf46dff2dc          
+     0754b94f31cbb385
+     5e7fd36dc870bfae
+4) Context Menu (press the right mouse button on toolbar):
+   [Test] - [Test AscHex2Bin edited text] -- [Key]
+
+5) Button: [/Text Editor-Mode]
+6) Copy/paste the TDES IV into text field
+     3d1de3cc132e3b65
+7) Context Menu (right mouse button):
+   [Test] - [Test AscHex2Bin edited text] -- [IV]
+
+8) Button: [/Text Editor-Mode]
+9) Copy/paste the plaintext into the text field
+     84401f78fe6c1087 6d8ea23094ea5309
+10) Context Menu (right mouse button):
+   [Test] - [Test AscHex2Bin edited text] -- [Plaintext]
+
+11) Finally the result is displayed in text field.
+     7B 1F 7C 7E 3B 1C 94 8E BD 04 A7 5F FB A7 D2 F5
+
+Example steps in detail:
+3DES TEST for sample #2 
+1st plaintext block = 84401f78fe6c1087
+1-Encrypt-
+-IV-> 84401f78fe6c1087 XOR 3d1de3cc132e3b65 = B95dfcb4ed422be2 <--
+_inbuf   = B9 5d fc b4 ed 42 2b e2
+_outbuf  = 13 88 1C B7 B4 2A DB E0
+2-Decipher-
+_inbuf   = 13 88 1C B7 B4 2A DB E0
+_outbuf  = 4b 34 cc 75 f9 a6 78 2b
+3-Encrypt-
+_inbuf   = 4b 34 cc 75 f9 a6 78 2b
+_outbuf  = 7B 1F 7C 7E 3B 1C 94 8E
+
+2nd plaintext block = 6d8ea23094ea5309
+1-Encrypt-
+-IV-> 6d8ea23094ea5309 XOR 7b1f7c7e3b1c948e = 1691de4eaff6c787 <--
+_inbuf   = 16 91 de 4e af f6 c7 87
+_outbuf  = da c1 44 83 39 39 44 ac
+2-Decipher-
+_inbuf   = da c1 44 83 39 39 44 ac
+_outbuf  = b4 f6 2e f5 9d 46 9e 71
+1-Encrypt-
+_inbuf   = b4 f6 2e f5 9d 46 9e 71
+_outbuf  = BD 04 A7 5F FB A7 D2 F5
+
+Result
+CIPHERTEXT = 7B 1F 7C 7E 3B 1C 94 8E   BD 04 A7 5F FB A7 D2 F5
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Sample #2 (AsciiHex)
+KEY1 = 37ae5ebf46dff2dc          
+KEY2 = 0754b94f31cbb385
+KEY3 = 5e7fd36dc870bfae
+IV = 3d1de3cc132e3b65
+PLAINTEXT =  84401f78fe6c1087 6d8ea23094ea5309  (AsciiHex)
+CIPHERTEXT = 7b1f7c7e3b1c948e bd04a75ffba7d2f5  (AsciiHex)
+
+The DES Test for sample #2 can be run successively in Modes
+Menu: [Crypto] - [DES] - [DES /Encrypt (CBC Ciphertext stealing)]
+Menu: [Crypto] - [DES] - [DES /Decipher (CBC Ciphertext stealing)]
+Menu: [Crypto] - [DES] - [DES /Encrypt (CBC Ciphertext stealing)]
+ using the Context Menu (right mouse button on toolbar) as follows:
+
+IV =          3d1de3cc132e3b65
+Plaintext_1 = 84401f78fe6c1087
+Key1 = 37ae5ebf46dff2dc & Plaintext    /Encrypt  -->  13 88 1C B7 B4 2A DB E0 = Chiphertext1
+key2 = 0754b94f31cbb385 & Chiphertext1 /Decipher -->  76 29 2F B9 EA 88 43 4E = Chiphertext2
+Key3 = 5e7fd36dc870bfae & Chiphertext2 /Encrypt  -->  7B 1F 7C 7E 3B 1C 94 8E = CIPHERTEXT_1
+
+IV =          CIPHERTEXT_1
+Plaintext_2 = 6d8ea23094ea5309
+Key1 = 37ae5ebf46dff2dc & Plaintext    /Encrypt  -->  DA C1 44 83 39 39 44 AC = Chiphertext1
+key2 = 0754b94f31cbb385 & Chiphertext1 /Decipher -->  CF E9 52 8B A6 5A 0A FF = Chiphertext2
+Key3 = 5e7fd36dc870bfae & Chiphertext2 /Encrypt  -->  BD 04 A7 5F FB A7 D2 F5 = CIPHERTEXT_2
+
+Result
+CIPHERTEXT = CIPHERTEXT_1 || CIPHERTEXT_2
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
