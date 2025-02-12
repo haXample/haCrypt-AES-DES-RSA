@@ -24,7 +24,7 @@ CIPHERTEXT = 7b1f7c7e3b1c948e bd04a75ffba7d2f5
 
 #### Using haCrypt Test-Menu to easily veriify the Sample#1
 
-1) start haCrypt and in Crypto-Menu choose choose `[3DES]-[TDES /ENCRYPT (CBC Ciphertext stealing]`  
+1) start haCrypt and in Crypto-Menu choose `[3DES]-[TDES /ENCRYPT (CBC Ciphertext stealing]`  
 2) select `[/TEXT editor mode]`	and copy *KEY1..Key3* into the text field  
 3) right-click the toolbar and select `[Test]-[AscHex2Bin edited text]`   
 4) define the key in the dialog by clicking the [KEY] button   
