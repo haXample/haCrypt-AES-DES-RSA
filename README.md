@@ -129,7 +129,7 @@ Tools:
 
 ... see the Nmake-script `source/haCrypt.NMK` for details.
 
-#### haCrypt-Test: `_TEST_SUITE\__Public_Reference_Test`
+#### haCrypt-Test: `_TEST_SUITE\_Reference_Test`
 
 Textual vectors for crypto development with verified results
 
