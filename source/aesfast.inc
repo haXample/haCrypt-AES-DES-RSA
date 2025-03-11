@@ -399,5 +399,6 @@ AES_DIV_GF MACRO _y
         cdq                              ;   into every bit position in the EDX register [edx::eax].
         mov      ecx, 255                ; IDIV divides the (signed) value in the [edx::eax]
         idiv     ecx                     ;  by operand (divisor) - result in the [edx::eax] registers.
-        movzx    edx, BYTE PTR _pow[edx] ; pow[(log[i] + log[y]) % 255];  
+        movzx    edx, BYTE PTR _pow[edx] ; pow[(log[i] + log[y]) % 255];
+
         ENDM
